@@ -3,21 +3,25 @@
     <main>
       <!-- start: search bar -->
       <div class="search-box">
-        <input type="text" class="search-bar" placeholder="Search... " />
+        <input type="text" class="search-bar" placeholder="Search... " v-model="query" @keypress="fetchWeather" />
+        {{ query }}
       </div>
 
       <!-- start: weather location box -->
-      <div class="weather-wrap">
+      <div class="weather-wrap" v-if="(typeof weather.main != 'undefined')">
         <div class="location-box">
-          <div class="location">Portland, Oregon</div>
-          <div class="date">Wednesday 27 March 2024</div>
+          <div class="location">{{ weather.name }},{{ weather.sys.country }}</div>
+          <div class="date">{{ dateBuilder() }}</div>
         </div>
+
 
         <div class="weather-box">
           <div class="temp">
-            9°c
+
+            {{ Math.round(weather.main.temp) }}°f
+
           </div>
-          <div class="weather">Rain</div>
+          <div class="weather">{{ weather.weather[0].main }}</div>
         </div>
 
       </div>
@@ -32,7 +36,35 @@ export default {
   name: 'App',
   data() {
     return {
-      api_key: '6a063edd1476fa8c81deb573ada1e6fb'
+      api_key: '6a063edd1476fa8c81deb573ada1e6fb',
+      url_base: 'https://api.openweathermap.org/data/2.5/',
+      query: '',
+      weather: {} // create an empty object to store the returned weather data from the api
+    }
+  },
+  methods: {
+    fetchWeather(e) {
+      // if enter key is pressed then run the method
+      if (e.key === 'Enter') {
+        fetch(`${this.url_base}weather?q=${this.query}&units=imperial&APPID=${this.api_key}`)
+          .then(res => res.json())
+          .then(data => {
+            this.weather = data;
+            console.log(data);
+          })
+      }
+    },
+    dateBuilder() {
+      let d = new Date();
+      let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+      let day = days[d.getDay()];
+      let date = d.getDate();
+      let month = months[d.getMonth()];
+      let year = d.getFullYear();
+
+      return `${day} ${month} ${date} ${year}`;
     }
   }
 }
