@@ -1,10 +1,10 @@
 <template>
-  <div id="app">
+  <div id="app" :class="typeof weather.main != 'undefined' && weather.main.temp > 65 ? 'warm' : ''">
     <main>
       <!-- start: search bar -->
       <div class="search-box">
         <input type="text" class="search-bar" placeholder="Search... " v-model="query" @keypress="fetchWeather" />
-        {{ query }}
+
       </div>
 
       <!-- start: weather location box -->
@@ -13,7 +13,6 @@
           <div class="location">{{ weather.name }},{{ weather.sys.country }}</div>
           <div class="date">{{ dateBuilder() }}</div>
         </div>
-
 
         <div class="weather-box">
           <div class="temp">
@@ -87,6 +86,13 @@ body {
   background-position: bottom;
   transition: 0.4s;
 }
+
+#app.warm {
+  background-image: url('./assets/warm-bg.jpg');
+
+}
+
+
 
 main {
   min-height: 100vh;
