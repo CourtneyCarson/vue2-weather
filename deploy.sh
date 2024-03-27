@@ -9,7 +9,7 @@ cd dist
 git init
 git add -A
 git commit -m 'deploy'
-git push -f https://github.com/CourtneyCarson/vue2-weather.git main:gh-pages
+git push -f https://github.com/CourtneyCarson/vue2-weather.git main
 
 cd -
 
